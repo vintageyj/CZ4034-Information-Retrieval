@@ -1,21 +1,44 @@
 from abc import ABC, abstractmethod
 import numpy as np
 
+import encoders
+import indexers
+from enums import *
+
 class Retriever(ABC):
     """
     Class that retrieves results based on query
+    1. must store data in original user-friendly format and return relevant results via retrieve_results
     """
 
     @abstractmethod
-    def retrieve_candidates(self):
+    def retrieve_results(self):
         pass
 
-class LeaderRetriever(Retriever):
+class BaseRetriever(Retriever):
     """
-    Perform Leader Search for retrieval, by taking a query and looking for the nearest "leader" and returning results in the same cluster as the leader
+    Initialize desired encoder and indexer and handle searching
     """
-    def __init__(self):
-        pass
+    def __init__(self, encoder_type: EncoderType, indexer_type: IndexerType, corpus, encoder_kwargs = {}, indexer_kwargs = {}):
+        self.encoder_type = encoder_type
+        self.indexer_type = indexer_type
+        self.corpus = corpus
+        self._init_encoder(corpus, encoder_kwargs)
+        self._init_indexer(indexer_kwargs)
 
-    def retrieve_candidates(self, query: np.array):
-        pass
+    def _init_encoder(self, corpus, encoder_kwargs):
+        enc = getattr(encoders, self.encoder_type.value)(**encoder_kwargs)
+        self.encoder = enc
+        self.encoder.encode_corpus(corpus)
+        
+
+    def _init_indexer(self, indexer_kwargs):
+        indexer = getattr(indexers, self.indexer_type.value)(**indexer_kwargs)
+        self.indexer = indexer
+        self.indexer.create_indexes(self.encoder.encoded_corpus_)
+
+    def retrieve_results(self, query: str):
+        encoded_query = self.encoder.encode(query)
+        results = self.indexer.search_indexes(encoded_query)
+        return results
+
