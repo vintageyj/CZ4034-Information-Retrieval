@@ -43,6 +43,7 @@ def get_company_reviews(driver, key, value):
         # time.sleep(np.random.choice(range(4, 10)))
         driver.sleep(5)
         elem = driver.find_element(By.ID, "ReviewsRef", timeout=5)
+        print("Elem:", elem.text)
         inner_html = elem.get_attribute('innerHTML')
         soup = BeautifulSoup(inner_html, 'html.parser')
 
@@ -50,7 +51,7 @@ def get_company_reviews(driver, key, value):
         for list_item in list_items:
             overallRating = list_item.find('span', class_="review-details__review-details-module__overallRating").text
             OverallRatings.append(overallRating)
-            reviewDate = list_item.find('span', class_="review-details__review-details-module__reviewDate").text
+            reviewDate = list_item.find('span', class_="timestamp__timestamp-module__reviewDate").text
             ReviewDates.append(reviewDate)
             reviewTitle = list_item.find('a', class_="review-details__review-details-module__detailsLink review-details__review-details-module__title").text
             ReviewTitles.append(reviewTitle)
@@ -119,6 +120,7 @@ def main(company_count):
     print(len(companies))
 
     with webdriver.Chrome() as driver:
+        driver.maximize_window()
         for key, value in companies.items():
             count += 1
             if count != company_count: # <----------------CHANGE THIS TO THE AMOUNT REQUIRED
@@ -129,7 +131,7 @@ def main(company_count):
 
             Reviews = pd.DataFrame(list(zip(Company_list, OverallRatings, ReviewDates, ReviewTitles, JobTitles, JobDetails, Locations, Pros, Cons)), 
                                 columns = ['Company Name', 'Overall Rating', 'Review Date', 'Review Title', 'Job Title', 'Job Details', 'Location', 'Pros', 'Cons'])
-            Reviews.to_csv(f'company_reviews/sg_companies_reviews{count}.csv', index=False, encoding='utf-8') # Rename csv file accordingly
+            Reviews.to_csv(f'company_reviews/sg_companies_reviews{count}_test.csv', index=False, encoding='utf-8') # Rename csv file accordingly
             
             if count >= max_companies:
                 break
@@ -139,11 +141,17 @@ def main(company_count):
 
 for i in range(1,201):
     # if i in []:
+    if i != 140:
+        continue
     try:
         main(i)
-    except:
+    except Exception as e:
+        print("Failed first because",e)
         try:
             main(i)
         except Exception as e:
-            print("Failed",e)
+            print("Failed because",e)
+            break
             continue
+    print("Scraping Completed!")
+    break
