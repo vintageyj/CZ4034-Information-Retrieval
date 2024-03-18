@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import numpy as np
+from cleantext import clean
 
 import encoders
 import indexers
@@ -38,6 +39,8 @@ class BaseRetriever(Retriever):
         self.indexer.create_indexes(self.encoder.encoded_corpus_)
 
     def retrieve_results(self, query: str):
+        ## applying cleaning to query, assuming user only inputs normal text and not emojis, bullet points etc. this assumption speeds up querying and is based on normal expected user behavior
+        query = clean(query, no_punct=True)
         encoded_query = self.encoder.encode(query)
         results = self.indexer.search_indexes(encoded_query)
         return results

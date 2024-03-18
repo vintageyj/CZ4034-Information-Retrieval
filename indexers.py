@@ -45,3 +45,4 @@ class LeaderIndexer(Indexer):
         # cluster_sim_pairs = [(data, sim) for (data, sim) in zip(cluster_data, cluster_member_similarities)]
         sorted_results = cluster_member_similarities.flatten().argsort()[::-1]
         return sorted_results
+    
