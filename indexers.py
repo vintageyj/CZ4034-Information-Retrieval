@@ -63,9 +63,9 @@ class LeaderIndexer(Indexer):
         
         ## get similarities between cluster members and query
         cluster_member_similarities = cosine_similarity(cluster_data, query)
-        # cluster_sim_pairs = [(data, sim) for (data, sim) in zip(cluster_data, cluster_member_similarities)]
+        cluster_sim_pairs = [(data_idx, sim) for data_idx, sim in enumerate(cluster_member_similarities)]
         sorted_results = cluster_member_similarities.flatten().argsort()[::-1]
-        return sorted_results
+        return sorted(cluster_sim_pairs, reverse = True, key = lambda x: x[1])
     
     def _fit_dim_reducer(self, data, min_explained_var):
         return PCA(n_components = min_explained_var).fit(data)

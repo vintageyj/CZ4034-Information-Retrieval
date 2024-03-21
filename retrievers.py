@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import numpy as np
+import pandas as pd
 from cleantext import clean
 
 import encoders
@@ -20,11 +21,11 @@ class BaseRetriever(Retriever):
     """
     Initialize desired encoder and indexer and handle searching
     """
-    def __init__(self, encoder_type: EncoderType, indexer_type: IndexerType, corpus, encoder_kwargs = {}, indexer_kwargs = {}):
+    def __init__(self, encoder_type: EncoderType, indexer_type: IndexerType, data: pd.DataFrame, column_to_index: str, encoder_kwargs = {}, indexer_kwargs = {}):
         self.encoder_type = encoder_type
         self.indexer_type = indexer_type
-        self.corpus = corpus
-        self._init_encoder(corpus, encoder_kwargs)
+        self.data = data
+        self._init_encoder(data[column_to_index].to_numpy(), encoder_kwargs)
         self._init_indexer(indexer_kwargs)
 
     def _init_encoder(self, corpus, encoder_kwargs):
@@ -43,5 +44,7 @@ class BaseRetriever(Retriever):
         query = clean(query, no_punct=True)
         encoded_query = self.encoder.encode(query)
         results = self.indexer.search_indexes(encoded_query)
-        return results
+        result_uids = self.data.iloc[[result[0] for result in results]]['id'].to_numpy()
+        result_similarities = [result[1] for result in results]
+        return [(uid, sim.item()) for uid, sim in zip(result_uids, result_similarities)]
 
