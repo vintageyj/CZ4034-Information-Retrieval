@@ -25,6 +25,18 @@ class Indexer(ABC):
         searches indexes for an ENCODED query
         """
         pass
+
+class SimpleIndexer(Indexer):
+    def __init__(self):
+        self.data_ = None
+
+    def create_indexes(self, data: np.ndarray):
+        self.data_ = data
+    
+    def search_indexes(self, query: np.ndarray):
+        data_similarities = cosine_similarity(self.data_, query)
+        data_sim_pairs = [(data_idx, sim) for data_idx, sim in enumerate(data_similarities)]
+        return sorted(data_sim_pairs, reverse = True, key = lambda x: x[1])
     
 class LeaderIndexer(Indexer):
     def __init__(self, n_clusters = 5, use_pca = False, min_explained_var = 0.95):
@@ -64,7 +76,7 @@ class LeaderIndexer(Indexer):
         ## get similarities between cluster members and query
         cluster_member_similarities = cosine_similarity(cluster_data, query)
         cluster_sim_pairs = [(data_idx, sim) for data_idx, sim in enumerate(cluster_member_similarities)]
-        sorted_results = cluster_member_similarities.flatten().argsort()[::-1]
+        # sorted_results = cluster_member_similarities.flatten().argsort()[::-1]
         return sorted(cluster_sim_pairs, reverse = True, key = lambda x: x[1])
     
     def _fit_dim_reducer(self, data, min_explained_var):

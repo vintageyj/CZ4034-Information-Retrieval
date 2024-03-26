@@ -6,3 +6,4 @@ class EncoderType(Enum):
 
 class IndexerType(Enum):
     LeaderIndexer = "LeaderIndexer"
+    SimpleIndexer = "SimpleIndexer"
