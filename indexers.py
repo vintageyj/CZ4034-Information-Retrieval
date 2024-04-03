@@ -4,6 +4,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD, PCA
 import numpy as np
 
+import bulk_injest
+from elasticsearch.helpers import streaming_bulk
+import pandas as pd
 
 class Indexer(ABC):
     """
@@ -81,3 +84,54 @@ class LeaderIndexer(Indexer):
     
     def _fit_dim_reducer(self, data, min_explained_var):
         return PCA(n_components = min_explained_var).fit(data)
+    
+
+class ElasticSearchIndexer(Indexer):
+    def __init__(self, client):
+        self.client = client
+        self.index_name = None
+
+    def create_indexes(self, data_path, index_name):
+        # Creation can be done easily with ElasticSearch Kibana
+        print("Creating index:", index_name)
+        bulk_injest.create_index(self.client, index_name)
+
+        df = pd.read_csv(data_path)
+        number_of_docs = len(df)
+
+        print("Indexing documents...")
+        successes = 0
+        for ok, action in streaming_bulk(
+            client=self.client, index=index_name, actions=bulk_injest.generate_actions(data_path),
+        ):
+            successes += ok
+        
+        if successes != number_of_docs:
+            raise ValueError("Failed to index all documents")
+        self.index_name = index_name
+
+    def search_indexes(self, queries:dict, pagination: tuple = (0, 10), operator = "must"):
+        '''
+        operator: variable that determines the type of boolean query to be used, can be
+        "must" or "should", which correspond to AND and OR operators respectively
+        '''
+
+        query_list = []
+        for field, query in queries.items():
+            if field == "Review Date":
+                dates = query.split("|")
+                query_list.append({"range": {field: {"gte": dates[0], "lte": dates[1]}}})
+            else:
+                query_list.append({"match": {field: query}})
+
+        response = self.client.search(
+                index=self.index_name,
+                from_=pagination[0],
+                size=pagination[1],
+                query={
+                    "bool" : {
+                        operator : query_list
+                    }
+                }
+            )
+        return response
