@@ -27,3 +27,5 @@ http://localhost:5601/
 ```
 
 If you have docker desktop, you can start the cluster directly from there instead on future sessions.
+
+Refer to the elasticsearch example noteboook on usage.
