@@ -109,6 +109,8 @@ def get_review_highlight(relevant_rows, row):
             return {"background-color": "lightgreen",'color':'black'}
         elif sentiment == 'Negative':
             return {"background-color": "lightcoral",'color':'black'}
+        elif sentiment == 'Neutral':
+            return {"background-color": "yellow",'color':'black'}
         else:
             return {}
     
