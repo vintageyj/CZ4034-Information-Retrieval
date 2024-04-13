@@ -65,3 +65,6 @@ The application will be launched and accessible at
 http://127.0.0.1:8050/
 ```
 
+<br><br>
+### Code for the Classification task
+The data files, codes, and results obtained with regards to the Classification task can all be found in _Classification_ folder under /tree/main/Classification
