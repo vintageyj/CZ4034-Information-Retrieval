@@ -1,0 +1,24 @@
+/* Custom Pagination Styles for Dark Theme with provided color codes */
+.custom-pagination .page-link {
+    color: #CCCCCC; /* Light gray for text to ensure readability on dark backgrounds */
+    background-color: #303030; /* Dark gray background from provided color code */
+    border-color: #444444; /* Slightly lighter gray border for definition from provided color code */
+}
+
+.custom-pagination .page-item.active .page-link {
+    color: #FFFFFF; /* White text for the active page link for maximum contrast */
+    background-color: #222222; /* Slightly darker gray background for the active page link from provided color code */
+    border-color: #444444; /* Maintain border color consistency on active state */
+}
+
+.custom-pagination .page-link:hover {
+    color: #FFFFFF; /* White text color on hover for visibility */
+    background-color: #444444; /* Slightly lighter gray background on hover for a subtle effect */
+    border-color: #555555; /* Darker border on hover for a 3D effect */
+}
+
+.custom-pagination .page-item.disabled .page-link {
+    color: #6c757d; /* Bootstrap's default disabled color for muted appearance */
+    background-color: #303030; /* Maintain the same background color as normal state */
+    border-color: #444444; /* Same border color for disabled state for consistency */
+}
