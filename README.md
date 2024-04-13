@@ -32,6 +32,7 @@ If you have docker desktop, you can start the cluster directly from there instea
 
 Refer to the elasticsearch example notebook on usage.
 
+</br></br>
 ### Setup Instructions for Dash App
 
 Step 1: Create Conda Environment
