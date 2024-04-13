@@ -28,6 +28,9 @@ end_indexing = time.time()
 print(f"Building of Index: time taken for indexing: {end_indexing - start_indexing}s")
 
 global df_raw
+global country_name
+country_name=None
+
 df_raw = pd.read_csv("data/new_sg_companies_reviews_UID.csv")
 df = pd.read_csv("data/location.csv")
 
@@ -117,11 +120,6 @@ def get_review_highlight(relevant_rows, row):
         highlighted_part = [html.Span(word + " ", style=get_style(index)) for index, word in enumerate(part_words)]
         highlighted_text_parts.append(highlighted_part)
 
-    print(highlighted_text_parts[0])
-    print('next')
-    print(highlighted_text_parts[1])
-
-    #highlighted_text = [html.Span(word + " ", style=get_style(index)) for index, word in enumerate(words)]
     return highlighted_text_parts
 
 
@@ -148,11 +146,6 @@ def generate_search_card(button_clicked, page, relevant_rows):
                     card_content+
                     [
                         html.Hr(),
-                        # html.H6("Pros", className="card-subtitle mb-2 text-muted"),
-                        # html.Ul([html.Li(relevant_rows.iloc[row]['Pros'])],style={'maxHeight': '100px','overflowY': 'scroll'}),
-                        # html.H6("Cons", className="card-subtitle mb-2 text-muted"),
-                        # html.Ul([html.Li(relevant_rows.iloc[row]['Cons'])],style={'maxHeight': '100px','overflowY': 'scroll'}),
-                        # html.Hr(),
                         html.H6("Review", className="card-subtitle mb-2 text-muted"),
                         html.Ul([html.Li(get_review_highlight(relevant_rows, row)[1])],style={'maxHeight': '300px','overflowY': 'scroll'}),
                         html.Hr(),
@@ -268,7 +261,6 @@ app.layout = html.Div([
 def highlight_country(clickData, figure):
     if clickData:
         iso_code = clickData['points'][0]['location']
-        global country_name
         country_name = clickData['points'][0]['text']
         print(f"Country selected: {country_name}")  # Print the name of the selected country in the terminal
         
@@ -364,13 +356,9 @@ def update_results(selected_companies, selected_dates, n_clicks, page_click, app
 
         print(selected_dates) # For debugging
         
-        
         # Input values from date slider are returned as a list: [start_date, end_date]
         start_date = selected_dates[0]
         end_date = selected_dates[1]
-        # print(start_date, (type(start_date)))
-        # print(end_date, (type(end_date)))
-        
 
         date_datetime = datetime.utcfromtimestamp(start_date)
         formatted_start_date = date_datetime.strftime('%Y-%m-%d')
@@ -378,9 +366,15 @@ def update_results(selected_companies, selected_dates, n_clicks, page_click, app
         date_datetime = datetime.utcfromtimestamp(end_date)
         formatted_end_date = date_datetime.strftime('%Y-%m-%d')
         
-        query_dict = {'Overall Review with Title': query, 
-                      'Job Title': job_titles, 
-                      'Review Date': f'{formatted_start_date}|{formatted_end_date}'}
+        if job_titles:
+            query_dict = {'Overall Review with Title': query, 
+                        'Job Title': job_titles, 
+                        'Review Date': f'{formatted_start_date}|{formatted_end_date}',
+                        }
+        else:
+            query_dict = {'Overall Review with Title': query, 
+                        'Review Date': f'{formatted_start_date}|{formatted_end_date}',
+                        }
         
         start_retrieving = time.time()
         results = retriever.retrieve_results(query_dict, pagination=(0,10000), operator="must")
@@ -406,6 +400,15 @@ def update_results(selected_companies, selected_dates, n_clicks, page_click, app
         
         global relevant_rows
         relevant_rows = results
+
+        # Filter based on selected companies
+        if selected_companies: 
+            filtered_rows=relevant_rows[relevant_rows['Company Name'].isin(selected_companies)]
+            if len(filtered_rows)>25: relevant_rows=filtered_rows
+        # Filter based on country
+        if country_name!=None: 
+            filtered_rows=relevant_rows[relevant_rows['Country']==country_name]
+            if len(filtered_rows)>25: relevant_rows=filtered_rows
         
         # There was a need to convert the entire df['Review Title'] into pd.TimeStamp for the date slider to work
         # The following step is done as the Review Date is displayed as "2024-02-12T00:00:00" in the output.
@@ -424,7 +427,6 @@ def update_results(selected_companies, selected_dates, n_clicks, page_click, app
             )
         card=generate_search_card(0, page, relevant_rows)
 
-        
 
         sentiment_counts = relevant_rows['Predicted Sentiment'].value_counts()
         sentiment_data = pd.DataFrame({
@@ -444,8 +446,6 @@ def update_results(selected_companies, selected_dates, n_clicks, page_click, app
         
 
         # Histogram for 'Overall Rating'
-        # fig_overall_rating = px.histogram(relevant_rows, x='Overall Rating', nbins=5, title='Overall Rating Distribution')
-        # fig_overall_rating.update_layout(font = dict(color = '#FFFFFF'), paper_bgcolor = 'rgba(0,0,0,0)', plot_bgcolor = 'rgba(0,0,0,0)',xaxis=dict(tickvals=list(range(1, 6)), ticktext=list(range(1, 6))))
         bin_colors = ['#D01110', '#F6A21E', '#F7DA42', '#478C5C', '#104210']  # Lighter red/orange, light green are adjusted
 
         # Create a list of bin counts for ratings 1 to 5
