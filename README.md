@@ -21,8 +21,10 @@ evaluation_data_labeled.csv - the final evaluation dataset of 1596 reviews manua
 2. final_codes:
 
 sentimental-analysis-on-eval-data.ipynb - the codes used to perform ABSA, VADER on the evaluation dataset
+*Note the path to the evaluation dataset has to be changed accordingly
 
 sentimental-analysis-on-full-data.ipynb - the codes used to perform ABSA, VADER on the full dataset
+*Note the path to the full dataset has to be changed accordingly
 
 3. final_results:
 
