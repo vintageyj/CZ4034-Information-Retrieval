@@ -11,14 +11,21 @@ Current stage:
 
 final:
 1. final_data:
+
 raw_evaluation_data.csv - 1596 reviews randomly selected to be annotated/labelled for evaluation dataset
+
 evaluation_data_raw_601_to_end_checked.csv and evaluation_data_raw_all_checked.csv - show the manual labelleing and checking of the reviews in the evaluation dataset
+
 evaluation_data_labeled.csv - the final evaluation dataset of 1596 reviews manually labelled
 
 2. final_codes:
+
 sentimental-analysis-on-eval-data.ipynb - the codes used to perform ABSA, VADER on the evaluation dataset
+
 sentimental-analysis-on-full-data.ipynb - the codes used to perform ABSA, VADER on the full dataset
 
 3. final_results:
+
 eval_results_distilbert_finetuned_atepc_vader.csv - the automatic classification results of the evaluation dataset resulting from sentimental-analysis-on-eval-data.ipynb
+
 full_results_distilbert_finetuned_atepc_vader.csv - the automatic classification results of the full dataset resulting from sentimental-analysis-on-full-data.ipynb
