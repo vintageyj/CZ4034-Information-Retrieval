@@ -29,3 +29,33 @@ http://localhost:5601/
 If you have docker desktop, you can start the cluster directly from there instead on future sessions.
 
 Refer to the elasticsearch example noteboook on usage.
+
+Setup Instructions for Dash App
+
+Step 1: Create Conda Environment
+To create a new Conda environment with Python 3.11, run the following command in your terminal:
+
+bash
+Copy code
+conda create --name myenv python=3.11
+Replace myenv with your preferred environment name.
+
+Step 2: Install Dependencies
+Activate the newly created environment:
+
+bash
+Copy code
+conda activate myenv
+Then, install the project dependencies using pip and the provided requirements.txt file:
+
+bash
+Copy code
+pip install -r requirements.txt
+Step 3: Run the Application
+Once the dependencies are installed, you can run the application by executing the app.py file:
+
+bash
+Copy code
+python app.py
+The application will be launched and accessible at http://127.0.0.1:8050/.
+
