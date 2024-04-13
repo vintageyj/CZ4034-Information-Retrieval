@@ -39,8 +39,8 @@ _sentimental-analysis-on-full-data.ipynb_ - the code used to perform ABSA, VADER
 
 _validation_results.csv_ - the automatic classification results of the evaluation dataset from DistilBERT model
 
-_glassdoor_data_distilbert_finetuned.csv_ - the automatic classification results of the full dataset from DistillBERT model
+_glassdoor_data_distilbert_finetuned.csv_ - the automatic classification results of the full dataset from DistilBERT model
 
-_eval_results_distilbert_finetuned_atepc_vader.csv_ - the automatic classification results of the evaluation dataset resulting from ABSA and VADER
+_eval_results_distilbert_finetuned_atepc_vader.csv_ - the automatic classification results of the evaluation dataset resulting from DistilBERT, ABSA and VADER
 
-_full_results_distilbert_finetuned_atepc_vader.csv_ - the automatic classification results of the full dataset resulting from ABSA and VADER
+_full_results_distilbert_finetuned_atepc_vader.csv_ - the automatic classification results of the full dataset resulting from DistilBERT, ABSA and VADER
