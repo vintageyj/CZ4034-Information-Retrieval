@@ -11,7 +11,7 @@ Process:
 final:
 1. Final Data folder:
 
-raw_evaluation_data.csv - 1596 reviews randomly selected to be annotated/labelled for evaluation dataset
+evaluation_data_raw.csv - 1596 reviews randomly selected to be annotated/labelled for evaluation dataset
 
 evaluation_data_raw_601_to_end_checked.csv and evaluation_data_raw_all_checked.csv - the manual labelling and checking of the reviews in the evaluation dataset
 
