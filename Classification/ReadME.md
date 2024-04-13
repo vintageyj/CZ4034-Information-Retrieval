@@ -1,14 +1,16 @@
 # CZ4034-Information-Retrieval
 
 Process:
-  1. Manual Labelling of Evaluation Dataset
-  2. Training/Finetuning of Distilbert model
-  3. Automatic classification results from Distilbert model on both the Evaluation Dataset and Full Dataset
-  4. Automatic classification results from ABSA and VADER model on both the Evaluation Dataset and Full Dataset
-  	- Ran Pretrained Model from pyabsa: https://github.com/yangheng95/PyABSA, and Pretrained Model from VADER
-	- need to pip install pyabsa and nltk
 
-final:
+1. Manual Labelling of Evaluation Dataset
+2. Training/Finetuning of Distilbert model
+3. Automatic classification results from Distilbert model on both the Evaluation Dataset and Full Dataset
+4. Automatic classification results from ABSA and VADER model on both the Evaluation Dataset and Full Dataset
+- Ran Pretrained Model from pyabsa: https://github.com/yangheng95/PyABSA, and Pretrained Model from VADER
+- need to pip install pyabsa and nltk
+
+Final Data, Codes and Results:
+
 1. Final Data folder:
 
 evaluation_data_raw.csv - 1596 reviews randomly selected to be annotated/labelled for evaluation dataset
